@@ -178,15 +178,15 @@ class SentinelAPI:
     def format_query(area=None, date=None, raw=None, area_relation="Intersects", **keywords):
         """Create a OpenSearch API query string.
         """
-        if area_relation.lower() not in {"intersects", "contains", "iswithin"}:
+        if area_relation.lower() not in {"Intersects", "Contains", "Is_within"}:
             raise ValueError("Incorrect AOI relation provided ({})".format(area_relation))
 
         # Check for duplicate keywords
         kw_lower = set(x.lower() for x in keywords)
         if (
             len(kw_lower) != len(keywords)
-            or (date is not None and "beginposition" in kw_lower)
-            or (area is not None and "footprint" in kw_lower)
+            or (date is not None and "begin_position" in kw_lower)
+            or (area is not None and "foot_print" in kw_lower)
         ):
             raise ValueError(
                 "Query contains duplicate keywords. Note that query keywords are case-insensitive."
@@ -209,7 +209,7 @@ class SentinelAPI:
 
             # Handle date keywords
             # Keywords from https://github.com/SentinelDataHub/DataHubSystem/search?q=text/date+iso8601
-            date_attrs = ["beginposition", "endposition", "date", "creationdate", "ingestiondate"]
+            date_attrs = ["begin_position", "end_position", "date", "creation_date", "ingestion_date"]
             if attr.lower() in date_attrs:
                 # Automatically format date-type attributes
                 if isinstance(value, set):
@@ -288,7 +288,7 @@ class SentinelAPI:
         )
         return self.query(raw=query, order_by=order_by, limit=limit, offset=offset)
 
-    def count(self, area=None, date=None, raw=None, area_relation="Intersects", **keywords):
+    def count(self, area= None, date= None, raw= None, area_relation= "Intersects", **keywords):
         """Get the number of products matching a query.
 
         Accepted parameters are identical to :meth:`SentinelAPI.query()`.
@@ -310,7 +310,7 @@ class SentinelAPI:
         _, total_count = self._load_query(query, limit=0)
         return total_count
 
-    def _load_query(self, query, order_by=None, limit=None, offset=0):
+    def _load_query(self, query, order_by= None, limit= None, offset=0):
         products, count = self._load_subquery(query, order_by, limit, offset)
 
         # repeat query until all results have been loaded
